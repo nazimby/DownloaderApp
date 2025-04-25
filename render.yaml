@@ -10,9 +10,9 @@ services:
       - key: RENDER
         value: true
       - key: RENDER_VOLUME_PATH
-        value: /var/data/media
+        value: /opt/render/project/media
     disk:
       name: media-files
-      mountPath: /var/data/media
+      mountPath: /opt/render/project/media
       sizeGB: 1
     plan: free 

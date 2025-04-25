@@ -25,12 +25,25 @@ if 'DYNO' in os.environ or IS_RENDER:
 
 # Output dizini oluşturma - Render üçün persistant disk istifadə edirik
 if IS_RENDER:
-    OUTPUT_DIR = os.environ.get('RENDER_VOLUME_PATH', '/var/data/media')
+    OUTPUT_DIR = os.environ.get('RENDER_VOLUME_PATH', '/opt/render/project/media')
 else:
     OUTPUT_DIR = os.path.join(os.getcwd(), "output")
 
 if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
+    try:
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        print(f"Qovluq yaradıldı: {OUTPUT_DIR}")
+    except Exception as e:
+        print(f"Qovluq yarada bilmədik: {e}")
+        # Alternativ yol sınayaq
+        if IS_RENDER:
+            try:
+                tmp_dir = "/tmp/downloader_media"
+                os.makedirs(tmp_dir, exist_ok=True)
+                OUTPUT_DIR = tmp_dir
+                print(f"Alternativ qovluq yaradıldı: {OUTPUT_DIR}")
+            except Exception as e2:
+                print(f"Alternativ qovluq yarada bilmədik: {e2}")
 
 @app.route('/')
 def index():
