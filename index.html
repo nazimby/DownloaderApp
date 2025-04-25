@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Downloader</title>
+    <link rel="stylesheet" href="downloader.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Media Downloader</h1>
+            <p class="subtitle">MP3 ve MP4 dosyalarını en yüksek kalitede indir</p>
+        </header>
+        
+        <div class="download-form">
+            <div class="form-group">
+                <label for="url-input">Video URL'sini girin:</label>
+                <input type="url" id="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="format-select">Format seçin:</label>
+                <select id="format-select">
+                    <option value="mp3">MP3 (Ses)</option>
+                    <option value="mp4">MP4 (Video)</option>
+                </select>
+                <span class="quality-badge">En Yüksek Kalite</span>
+            </div>
+            
+            <button id="download-btn" class="btn">İndir</button>
+            
+            <div class="loader" id="loader"></div>
+            
+            <div id="status" class="status" style="display: none;"></div>
+        </div>
+        
+        <div class="result-section" id="result-section">
+            <h2>İndirme Hazır</h2>
+            <p>Medya dosyanız işlendi ve indirilmeye hazır.</p>
+            <a href="#" id="download-link" class="download-link" download>Dosyayı İndir</a>
+        </div>
+        
+        <div class="recent-downloads">
+            <h2>Son İndirilenler</h2>
+            <div id="recent-list">
+                <p>Henüz indirme yok</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Media Downloader &copy; 2024 - Sadece kişisel kullanım için</p>
+        </footer>
+    </div>
+    
+    <script src="downloader.js"></script>
+</body>
+</html>
