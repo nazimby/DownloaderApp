@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // API URL-i - deploy zamanı dəyişdirilə bilər
+    const API_BASE_URL = window.location.hostname.includes('github.io') 
+        ? 'https://your-backend-url.com' // Backend server URL-nizi buraya əlavə edin
+        : ''; // Lokal mühitdə boş string ("/api/download" kimi relativ PATH işlədə bilər)
+    
     const urlInput = document.getElementById('url-input');
     const formatSelect = document.getElementById('format-select');
     const downloadBtn = document.getElementById('download-btn');
@@ -28,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Backend'e istek gönder
         const format = formatSelect.value;
         
-        fetch('/api/download', {
+        fetch(`${API_BASE_URL}/api/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
