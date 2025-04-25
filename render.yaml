@@ -7,4 +7,10 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
+      - key: RENDER
+        value: true
+    disk:
+      name: media-files
+      mountPath: /opt/render/media
+      sizeGB: 1
     plan: free 

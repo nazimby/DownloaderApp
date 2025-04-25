@@ -9,8 +9,11 @@ import subprocess
 app = Flask(__name__, static_url_path='', static_folder='.', template_folder='.')
 CORS(app)  # Bütün API endpointləri üçün CORS aktivləşdirildi
 
+# Render.com mühitində olub-olmadığımızı yoxlayırıq
+IS_RENDER = 'RENDER' in os.environ
+
 # Heroku'da FFmpeg'in qurulması
-if 'DYNO' in os.environ:
+if 'DYNO' in os.environ or IS_RENDER:
     try:
         # FFmpeg buildpack əgər quraşdırılıbsa
         ffmpeg_path = subprocess.check_output(["which", "ffmpeg"]).decode().strip()
@@ -18,10 +21,14 @@ if 'DYNO' in os.environ:
             print(f"FFmpeg found at: {ffmpeg_path}")
     except Exception as e:
         print(f"FFmpeg not found: {e}")
-        print("Please add the FFmpeg buildpack: heroku buildpacks:add https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git")
+        print("Please add the FFmpeg buildpack on Render or Heroku")
 
-# Output dizini oluşturma
-OUTPUT_DIR = os.path.join(os.getcwd(), "output")
+# Output dizini oluşturma - Render üçün persistant disk istifadə edirik
+if IS_RENDER:
+    OUTPUT_DIR = os.environ.get('RENDER_VOLUME_PATH', '/opt/render/media')
+else:
+    OUTPUT_DIR = os.path.join(os.getcwd(), "output")
+
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
