@@ -1,34 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="az">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Downloader</title>
+    <title>Media Yükləyici</title>
     <link rel="stylesheet" href="downloader.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Media Downloader</h1>
-            <p class="subtitle">MP3 ve MP4 dosyalarını en yüksek kalitede indir</p>
+            <h1>Media Yükləyici</h1>
+            <p class="subtitle">MP3 və MP4 fayllarını ən yüksək keyfiyyətdə endir</p>
         </header>
         
         <div class="download-form">
             <div class="form-group">
-                <label for="url-input">Video URL'sini girin:</label>
+                <label for="url-input">Video URL-ni daxil edin:</label>
                 <input type="url" id="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
             </div>
             
             <div class="form-group">
                 <label for="format-select">Format seçin:</label>
                 <select id="format-select">
-                    <option value="mp3">MP3 (Ses)</option>
+                    <option value="mp3">MP3 (Səs)</option>
                     <option value="mp4">MP4 (Video)</option>
                 </select>
-                <span class="quality-badge">En Yüksek Kalite</span>
+                <span class="quality-badge">Ən Yüksək Keyfiyyət</span>
             </div>
             
-            <button id="download-btn" class="btn">İndir</button>
+            <button id="download-btn" class="btn">Endir</button>
             
             <div class="loader" id="loader"></div>
             
@@ -36,20 +36,21 @@
         </div>
         
         <div class="result-section" id="result-section">
-            <h2>İndirme Hazır</h2>
-            <p>Medya dosyanız işlendi ve indirilmeye hazır.</p>
-            <a href="#" id="download-link" class="download-link" download>Dosyayı İndir</a>
+            <h2>Endirmə Hazırdır</h2>
+            <p>Media faylınız emal edildi və endirmək üçün hazırdır.</p>
+            <p class="download-info">Aşağıdakı düyməyə basıb, media faylınızı <b>Downloads</b> qovluğuna endirə bilərsiniz:</p>
+            <a href="#" id="download-link" class="download-link" download>Faylı Endir</a>
         </div>
         
         <div class="recent-downloads">
-            <h2>Son İndirilenler</h2>
+            <h2>Son Endirilənlər</h2>
             <div id="recent-list">
-                <p>Henüz indirme yok</p>
+                <p>Hələ endirmə yoxdur</p>
             </div>
         </div>
         
         <footer>
-            <p>Media Downloader &copy; 2024 - Sadece kişisel kullanım için</p>
+            <p>Media Yükləyici &copy; 2024 - Yalnız şəxsi istifadə üçün</p>
         </footer>
     </div>
     

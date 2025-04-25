@@ -13,24 +13,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadLink = document.getElementById('download-link');
     const recentList = document.getElementById('recent-list');
     
-    // Yerel depolamadan son indirmeleri yükle
+    // Yerli saxlamada olan son endirmələri yüklə
     loadRecentDownloads();
     
     downloadBtn.addEventListener('click', function() {
         // URL doğrulama
         const url = urlInput.value.trim();
         if (!url) {
-            showStatus('Lütfen geçerli bir URL girin', 'error');
+            showStatus('Zəhmət olmasa düzgün bir URL daxil edin', 'error');
             return;
         }
         
-        // Yükleme durumunu göster
+        // Yüklənmə vəziyyətini göstər
         downloadBtn.disabled = true;
         loader.style.display = 'block';
         resultSection.style.display = 'none';
-        showStatus('İndirme isteğiniz işleniyor...', 'processing');
+        showStatus('Endirmə sorğunuz işlənir...', 'processing');
         
-        // Backend'e istek gönder
+        // Backend-ə sorğu göndər
         const format = formatSelect.value;
         
         fetch(`${API_BASE_URL}/api/download`, {
@@ -46,25 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // İndirme başarılı
+                // Endirmə uğurlu
                 resultSection.style.display = 'block';
                 downloadLink.href = data.download_path;
                 downloadLink.setAttribute('download', data.filename);
                 
-                showStatus('İndirme başarıyla tamamlandı!', 'success');
+                showStatus('Endirmə uğurla tamamlandı!', 'success');
                 
-                // Son indirmelere ekle
+                // Son endirmələrə əlavə et
                 addRecentDownload(data.full_url || data.download_path, data.filename);
             } else {
-                showStatus('Hata: ' + (data.error || 'İndirme işlemi başarısız oldu.'), 'error');
+                showStatus('Xəta: ' + (data.error || 'Endirmə prosesi uğursuz oldu.'), 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showStatus('Bir hata oluştu: ' + error.message, 'error');
+            showStatus('Bir xəta baş verdi: ' + error.message, 'error');
         })
         .finally(() => {
-            // Yükleme durumunu kaldır
+            // Yüklənmə vəziyyətini sil
             loader.style.display = 'none';
             downloadBtn.disabled = false;
         });
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function addRecentDownload(url, filename) {
-        // Mevcut indirmeleri al veya boş dizi başlat
+        // Mövcud endirmələri al və ya boş massiv başlat
         let recentDownloads = [];
         try {
             recentDownloads = JSON.parse(localStorage.getItem('recentDownloads') || '[]');
@@ -88,22 +88,22 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('recentDownloads');
         }
         
-        // Yeni indirmeyi başa ekle
+        // Yeni endirməni başa əlavə et
         recentDownloads.unshift({
             url: url,
             filename: filename,
             date: new Date().toISOString()
         });
         
-        // Sadece son 5 indirmeyi tut
+        // Yalnız son 5 endirməni saxla
         if (recentDownloads.length > 5) {
             recentDownloads.pop();
         }
         
-        // LocalStorage'a kaydet
+        // LocalStorage-ə yadda saxla
         localStorage.setItem('recentDownloads', JSON.stringify(recentDownloads));
         
-        // Arayüzü güncelle
+        // İnterfeysi yenilə
         loadRecentDownloads();
     }
     
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (!recentDownloads || recentDownloads.length === 0) {
-            recentList.innerHTML = '<p>Henüz indirme yok</p>';
+            recentList.innerHTML = '<p>Hələ endirmə yoxdur</p>';
             return;
         }
         
@@ -137,10 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 downloadItem.className = 'recent-item';
                 downloadItem.innerHTML = `
                     <div>
-                        <strong>${item.filename || 'Unknown file'}</strong>
+                        <strong>${item.filename || 'Naməlum fayl'}</strong>
                         <div>${formattedDate}</div>
                     </div>
-                    <a href="${item.url || '#'}" download="${item.filename || ''}" class="btn">İndir</a>
+                    <a href="${item.url || '#'}" download="${item.filename || ''}" class="btn">Endir</a>
                 `;
                 
                 recentList.appendChild(downloadItem);
