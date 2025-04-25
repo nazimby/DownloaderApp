@@ -37,10 +37,15 @@ def download_media():
             output_filename = download_video(url, base_filename)
         
         # Dosya adını ve yolunu döndür
+        download_path = f"/download/{output_filename}"
+        host_url = request.host_url.rstrip('/')
+        full_download_url = f"{host_url}{download_path}"
+        
         return jsonify({
             "success": True,
             "filename": output_filename,
-            "download_path": f"/download/{output_filename}"
+            "download_path": download_path,
+            "full_url": full_download_url
         })
         
     except Exception as e:

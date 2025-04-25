@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showStatus('İndirme başarıyla tamamlandı!', 'success');
                 
                 // Son indirmelere ekle
-                addRecentDownload(data.download_path, data.filename);
+                addRecentDownload(data.full_url || data.download_path, data.filename);
             } else {
                 showStatus('Hata: ' + (data.error || 'İndirme işlemi başarısız oldu.'), 'error');
             }
@@ -73,7 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function addRecentDownload(url, filename) {
         // Mevcut indirmeleri al veya boş dizi başlat
-        const recentDownloads = JSON.parse(localStorage.getItem('recentDownloads') || '[]');
+        let recentDownloads = [];
+        try {
+            recentDownloads = JSON.parse(localStorage.getItem('recentDownloads') || '[]');
+        } catch (error) {
+            console.error('JSON parse error:', error);
+            recentDownloads = [];
+            // Xətalı məlumatları silmək
+            localStorage.removeItem('recentDownloads');
+        }
         
         // Yeni indirmeyi başa ekle
         recentDownloads.unshift({
@@ -95,29 +103,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function loadRecentDownloads() {
-        const recentDownloads = JSON.parse(localStorage.getItem('recentDownloads') || '[]');
+        let recentDownloads = [];
+        try {
+            recentDownloads = JSON.parse(localStorage.getItem('recentDownloads') || '[]');
+        } catch (error) {
+            console.error('JSON parse error:', error);
+            recentDownloads = [];
+            // Xətalı məlumatları silmək
+            localStorage.removeItem('recentDownloads');
+        }
         
-        if (recentDownloads.length === 0) {
+        if (!recentDownloads || recentDownloads.length === 0) {
             recentList.innerHTML = '<p>Henüz indirme yok</p>';
             return;
         }
         
         recentList.innerHTML = '';
         recentDownloads.forEach(function(item) {
-            const date = new Date(item.date);
-            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            if (!item || !item.date) {
+                return; // Yanlış məlumat quruluşuna malik elementləri atlayırıq
+            }
             
-            const downloadItem = document.createElement('div');
-            downloadItem.className = 'recent-item';
-            downloadItem.innerHTML = `
-                <div>
-                    <strong>${item.filename}</strong>
-                    <div>${formattedDate}</div>
-                </div>
-                <a href="${item.url}" download="${item.filename}" class="btn">İndir</a>
-            `;
-            
-            recentList.appendChild(downloadItem);
+            try {
+                const date = new Date(item.date);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                const downloadItem = document.createElement('div');
+                downloadItem.className = 'recent-item';
+                downloadItem.innerHTML = `
+                    <div>
+                        <strong>${item.filename || 'Unknown file'}</strong>
+                        <div>${formattedDate}</div>
+                    </div>
+                    <a href="${item.url || '#'}" download="${item.filename || ''}" class="btn">İndir</a>
+                `;
+                
+                recentList.appendChild(downloadItem);
+            } catch (error) {
+                console.error('Error rendering recent download item:', error);
+            }
         });
     }
 });
