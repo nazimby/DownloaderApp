@@ -82,6 +82,18 @@ def download_video(url, base_filename):
             'key': 'FFmpegVideoConvertor',
             'preferredformat': 'mp4',
         }],
+        'verbose': True,  # Ətraflı məlumat
+        'no_check_certificate': True,  # SSL sertifikatı yoxlamasını keçin
+        'nocheckcertificate': True,
+        'ignoreerrors': True,  # Bəzi xətaları yox sayın
+        'quiet': False,  # Verbose məlumatı görmək üçün
+        'no_warnings': False,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android'],  # Android klient kimi davranmaq
+                'player_skip': ['webpage', 'js'],  # Web səhifəni və JavaScript-i ötürmək
+            }
+        }
     }
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -102,6 +114,18 @@ def download_audio(url, base_filename):
             'preferredcodec': 'mp3',
             'preferredquality': '320',  # En yüksek kalite
         }],
+        'verbose': True,  # Ətraflı məlumat
+        'no_check_certificate': True,  # SSL sertifikatı yoxlamasını keçin
+        'nocheckcertificate': True,
+        'ignoreerrors': True,  # Bəzi xətaları yox sayın
+        'quiet': False,  # Verbose məlumatı görmək üçün
+        'no_warnings': False,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android'],  # Android klient kimi davranmaq
+                'player_skip': ['webpage', 'js'],  # Web səhifəni və JavaScript-i ötürmək
+            }
+        }
     }
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
