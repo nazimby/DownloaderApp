@@ -25,7 +25,7 @@ if 'DYNO' in os.environ or IS_RENDER:
 
 # Output dizini oluşturma - Render üçün persistant disk istifadə edirik
 if IS_RENDER:
-    OUTPUT_DIR = os.environ.get('RENDER_VOLUME_PATH', '/opt/render/media')
+    OUTPUT_DIR = os.environ.get('RENDER_VOLUME_PATH', '/var/data/media')
 else:
     OUTPUT_DIR = os.path.join(os.getcwd(), "output")
 
@@ -56,7 +56,12 @@ def download_media():
         else:  # mp4
             output_filename = download_video(url, base_filename)
         
-        # Dosya adını ve yolunu döndür
+        # Log fayl yolunu və mövcudluğunu
+        file_path = os.path.join(OUTPUT_DIR, output_filename)
+        file_exists = os.path.exists(file_path)
+        print(f"Çıxış faylı: {file_path}, Mövcuddur: {file_exists}")
+        
+        # Fayl yolunu və URL-i qaytarırıq
         download_path = f"/download/{output_filename}"
         host_url = request.host_url.rstrip('/')
         full_download_url = f"{host_url}{download_path}"
@@ -64,11 +69,14 @@ def download_media():
         return jsonify({
             "success": True,
             "filename": output_filename,
+            "file_path": file_path,
+            "file_exists": file_exists,
             "download_path": download_path,
             "full_url": full_download_url
         })
         
     except Exception as e:
+        print(f"Xəta: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 def download_video(url, base_filename):
@@ -135,6 +143,20 @@ def download_audio(url, base_filename):
 
 @app.route('/download/<path:filename>')
 def download_file(filename):
+    # Log - hansı fayl yolunda axtarış aparırıq
+    print(f"Fayl endirmə tələbi: {filename}")
+    print(f"Axtarılacaq qovluq: {OUTPUT_DIR}")
+    
+    # Yoxlayaq ki, fayl həqiqətən mövcuddur
+    file_path = os.path.join(OUTPUT_DIR, filename)
+    if os.path.exists(file_path):
+        print(f"Fayl tapıldı: {file_path}")
+    else:
+        print(f"Fayl tapılmadı: {file_path}")
+        # Qovluqdakı bütün faylları siyahı şəklində çap edək
+        all_files = os.listdir(OUTPUT_DIR)
+        print(f"Qovluqdakı mövcud fayllar: {all_files}")
+    
     return send_from_directory(OUTPUT_DIR, filename, as_attachment=True)
 
 if __name__ == "__main__":
