@@ -1,11 +1,24 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask_cors import CORS
 import yt_dlp
 import os
 import uuid
 import time
+import subprocess
 
 app = Flask(__name__, static_url_path='', static_folder='.', template_folder='.')
+CORS(app)  # Bütün API endpointləri üçün CORS aktivləşdirildi
 
+# Heroku'da FFmpeg'in qurulması
+if 'DYNO' in os.environ:
+    try:
+        # FFmpeg buildpack əgər quraşdırılıbsa
+        ffmpeg_path = subprocess.check_output(["which", "ffmpeg"]).decode().strip()
+        if ffmpeg_path:
+            print(f"FFmpeg found at: {ffmpeg_path}")
+    except Exception as e:
+        print(f"FFmpeg not found: {e}")
+        print("Please add the FFmpeg buildpack: heroku buildpacks:add https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git")
 
 # Output dizini oluşturma
 OUTPUT_DIR = os.path.join(os.getcwd(), "output")
